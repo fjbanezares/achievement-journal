@@ -1,0 +1,26 @@
+# .github/workflows/linter.yml
+
+name: 'Simple Commit Linter'
+
+on: [push, pull_request]
+
+jobs:
+  lint-commit-message:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Check for "hello" Prefix'
+        run: |
+          # Get the commit message directly from the GitHub event payload.
+          # This works for both push and pull_request events.
+          COMMIT_MSG='${{ github.event.head_commit.message }}'
+
+          echo "Checking commit message: $COMMIT_MSG"
+
+          # Simple pattern matching: checks if the string starts with "hello"
+          if [[ $COMMIT_MSG == "hello"* ]]; then
+            echo "Commit message starts with 'hello'. All good!"
+            exit 0
+          else
+            echo "Error: Your commit message ('$COMMIT_MSG') does not start with 'hello'."
+            exit 1
+          fi
